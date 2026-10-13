@@ -1,0 +1,466 @@
+/* Molokwu Acoustics - 3D Clickable Flip Cards */
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #1a1b20;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+}
+
+/* Header */
+.showcase-header {
+  text-align: center;
+  max-width: 720px;
+  margin-bottom: 3rem;
+}
+.showcase-header .header-badge {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e4e6eb;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.showcase-header h1 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(2rem, 4.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 0.6rem;
+  color: #ffffff;
+}
+.showcase-header p {
+  font-size: 1rem;
+  color: #9ca3af;
+  line-height: 1.6;
+}
+
+/* Cards layout */
+.wrapper {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1280px;
+}
+
+/* 3D card structure */
+.card {
+  width: 380px;
+  height: 550px;
+  perspective: 1500px;
+  position: relative;
+}
+.card .content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.75, 0, 0.85, 1);
+  border-radius: 16px;
+}
+
+/* Accessible hidden checkbox for instant label triggers */
+.more {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  margin: 0;
+}
+.more:checked ~ .content {
+  transform: rotateY(180deg);
+}
+.more:checked ~ .content .front {
+  pointer-events: none;
+  z-index: 1;
+}
+.more:checked ~ .content .back {
+  pointer-events: auto;
+  z-index: 5;
+}
+
+/* Card faces */
+.front,
+.back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.front .inner,
+.back .inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.7rem;
+  transform: translateZ(60px) scale(0.96);
+  transform-style: preserve-3d;
+}
+
+/* Front face */
+.front {
+  background-color: #23242a;
+  background-size: cover;
+  background-position: center;
+  z-index: 2;
+}
+.front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(26, 27, 32, 0.72) 0%, rgba(26, 27, 32, 0.3) 45%, rgba(26, 27, 32, 0.95) 100%);
+}
+.front:hover {
+  border-color: rgba(228, 230, 235, 0.25);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+}
+.front .top-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.front .top-bar .badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  text-transform: uppercase;
+  background: rgba(26, 27, 32, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #e4e6eb;
+}
+.front .top-bar .badge.flagship {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+.front .top-bar .badge.wireless {
+  color: #e4e6eb;
+}
+.front .top-bar .badge.master {
+  color: #fef08a;
+  border-color: rgba(254, 240, 138, 0.3);
+}
+.front .top-bar .promo {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #9ca3af;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+.front .product-info {
+  position: relative;
+  z-index: 2;
+  margin-top: auto;
+  margin-bottom: 1.2rem;
+}
+.front .product-info .category {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 0.35rem;
+}
+.front .product-info h2 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #ffffff;
+  margin-bottom: 0.3rem;
+}
+.front .product-info .tagline {
+  font-size: 0.86rem;
+  color: #9ca3af;
+  margin-bottom: 0.7rem;
+  line-height: 1.4;
+}
+.front .product-info .rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #f59e0b;
+}
+.front .product-info .rating .review-count {
+  margin-left: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+.front .bottom-bar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.front .bottom-bar .price-box .price {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: block;
+  line-height: 1;
+}
+.front .bottom-bar .price-box .original-price {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-decoration: line-through;
+  margin-top: 0.2rem;
+  display: block;
+}
+
+/* Back face */
+.back {
+  transform: rotateY(180deg);
+  background: #202126;
+  z-index: 1;
+}
+.back .back-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.back .back-header .model-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #d1d5db;
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.back .back-header h3 {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+.back .back-header .back-price {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.back .specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
+  margin: 0.9rem 0;
+}
+.back .specs-grid .spec-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.back .specs-grid .spec-card .spec-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e4e6eb;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+.back .specs-grid .spec-card .spec-text .spec-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  display: block;
+  line-height: 1.2;
+}
+.back .specs-grid .spec-card .spec-text .spec-label {
+  font-size: 0.65rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.back .back-details .description {
+  font-size: 0.83rem;
+  color: #9ca3af;
+  line-height: 1.45;
+  margin-bottom: 0.8rem;
+}
+.back .back-details .features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.back .back-details .features li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8rem;
+  color: #e2e8f0;
+}
+.back .back-details .features li i {
+  color: #d1d5db;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.back .back-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.back .back-actions .btn-order {
+  flex: 1;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #e4e6eb;
+  color: #17181c;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.back .back-actions .btn-order i {
+  color: #17181c;
+}
+.back .back-actions .btn-order:hover {
+  background: #ffffff;
+}
+
+/* Button & label toggles */
+.button {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  border-radius: 8px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.button * {
+  pointer-events: none;
+}
+.button.flip-btn {
+  gap: 0.45rem;
+  height: 42px;
+  padding: 0 1.25rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.button.flip-btn:hover {
+  background: #e4e6eb;
+  color: #1a1b20;
+  border-color: #e4e6eb;
+}
+.button.return-btn {
+  position: relative;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #d1d5db;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.button.return-btn:hover {
+  background: #ffffff;
+  color: #17181c;
+  border-color: #ffffff;
+}
+.button.return-btn:active {
+  background: #e4e6eb;
+}
+
+/* Footer */
+.showcase-footer {
+  margin-top: 3.5rem;
+  text-align: center;
+}
+.showcase-footer p {
+  font-size: 0.85rem;
+  color: #6b7280;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  body {
+    padding: 2rem 1rem;
+  }
+  .showcase-header {
+    margin-bottom: 2rem;
+  }
+  .card {
+    width: 100%;
+    max-width: 380px;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */
